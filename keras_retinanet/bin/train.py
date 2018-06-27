@@ -17,7 +17,6 @@ limitations under the License.
 """
 
 import argparse
-import functools
 import os
 import sys
 import warnings
@@ -455,10 +454,9 @@ def main(args=None):
 
     # this lets the generator compute backbone layer shapes using the actual backbone model
     if 'vgg' in args.backbone or 'densenet' in args.backbone:
-        compute_anchor_targets = functools.partial(anchor_targets_bbox, shapes_callback=make_shapes_callback(model))
-        train_generator.compute_anchor_targets = compute_anchor_targets
+        train_generator.compute_shapes         = make_shapes_callback(model)
         if validation_generator is not None:
-            validation_generator.compute_anchor_targets = compute_anchor_targets
+            validation_generator.compute_shapes         = make_shapes_callback(model)
 
     # create the callbacks
     callbacks = create_callbacks(
